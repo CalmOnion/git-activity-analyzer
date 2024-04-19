@@ -8,4 +8,11 @@ public record RepositoryInfo
 	public string? Author { get; set; }
 	public string? Username { get; set; }
 	public string? Password { get; set; }
+	public RepositoryInfo ToObfuscated() => new()
+	{
+		Url = Url,
+		Author = Author,
+		Username = Username,
+		Password = "********"
+	};
 }
