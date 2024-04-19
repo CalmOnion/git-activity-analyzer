@@ -85,6 +85,17 @@ public class ConfigUtils
 			.FirstOrDefault(x => x.Url == selectedUrl);
 	}
 
+	public static HashSet<string> SelectPropertiesToEdit(string[] properties)
+	{
+		var props = AnsiConsole.Prompt(
+			new MultiSelectionPrompt<string>()
+				.Title("Select a property to edit")
+				.AddChoices(properties)
+		).ToHashSet();
+
+		return props;
+	}
+
 	public static void DisplayData(object data, string header)
 	{
 		var json = new JsonText(ConfigToString(data));

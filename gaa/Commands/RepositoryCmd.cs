@@ -54,6 +54,14 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 	static int AddRepo(ConfigProfile profile)
 	{
 		var url = AnsiConsole.Ask<string>("Enter the repository URL");
+
+		if (profile.Repositories.Any(x => x.Url == url))
+		{
+			AnsiConsole.MarkupLine($"[red]Repository '{url}' already exists[/]");
+
+			return -1;
+		}
+
 		var author = AnsiConsole.Prompt(
 			new TextPrompt<string>("Enter the author name:")
 				.AllowEmpty()
@@ -85,20 +93,10 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 		if (repo is null)
 			return 0;
 
-		var repoText = ConfigUtils.ConfigToString(repo.ToObfuscated());
+		ConfigUtils.DisplayData(repo.ToObfuscated(), "Current Repository Info");
 
-		var table = new Table()
-			.Border(TableBorder.Rounded)
-			.AddColumn("Current Repository Info")
-			.AddRow(new JsonText(repoText));
-
-		AnsiConsole.Write(table);
-
-		var props = AnsiConsole.Prompt(
-			new MultiSelectionPrompt<string>()
-				.Title("Select a property to edit")
-				.AddChoices(["Author", "Username", "Password"])
-		).ToHashSet();
+		var props = ConfigUtils
+			.SelectPropertiesToEdit(["Author", "Username", "Password"]);
 
 		if (props.Contains("Author"))
 		{

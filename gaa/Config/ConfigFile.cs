@@ -37,7 +37,7 @@ public record AzureOpenAIConfig
 
 public record ConfigProfile
 {
-	public string Name { get; init; } = ConfigFile.DefaultProfileName;
+	public string Name { get; set; } = ConfigFile.DefaultProfileName;
 	public ProfileDefaults Defaults { get; init; } = new();
 	public List<RepositoryInfo> Repositories { get; init; } = [];
 	public ConfigProfile ToObfuscated() => new()

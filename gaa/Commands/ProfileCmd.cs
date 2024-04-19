@@ -52,25 +52,83 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 
 	static int AddProfile(ConfigFile config)
 	{
+		var name = AnsiConsole.Ask<string>("Enter the profile name");
+		if (config.Profiles.Any(x => x.Name == name))
+		{
+			AnsiConsole.MarkupLine($"[red]Profile '{name}' already exists[/]");
+
+			return -1;
+		}
+
+		config.Profiles.Add(new ConfigProfile { Name = name });
 
 		return 1;
 	}
 
 	static int EditProfile(ConfigFile config)
 	{
+		var selectedProfile = ConfigUtils.SelectProfile(config);
+		if (selectedProfile is null)
+			return -1;
+
+		var props = ConfigUtils.SelectPropertiesToEdit(["Name"]);
+
+		if (props.Contains("Name"))
+		{
+			var name = AnsiConsole.Ask<string>("Enter the profile name");
+			if (config.Profiles.Any(x => x.Name == name))
+			{
+				AnsiConsole.MarkupLine($"[red]Profile '{name}' already exists[/]");
+
+				return -1;
+			}
+
+			selectedProfile.Name = name;
+		}
 
 		return 1;
 	}
 
 	static int RemoveProfile(ConfigFile config)
 	{
+		var selectedProfile = ConfigUtils.SelectProfile(config);
+		if (selectedProfile is null)
+			return -1;
+
+		ConfigUtils.DisplayProfile(selectedProfile);
+
+		bool confirm = AnsiConsole
+			.Confirm($"Are you sure you want to remove profile '{selectedProfile.Name}'?");
+
+		if (!confirm)
+			return -1;
+
+		config.Profiles.Remove(selectedProfile);
+
+		if (config.Profiles.Count == 0)
+		{
+			AnsiConsole.MarkupLine("[red]No profiles exist, creating a new default profile[/]");
+			config.Profiles.Add(new ConfigProfile { Name = ConfigFile.DefaultProfileName });
+			config.DefaultProfile = ConfigFile.DefaultProfileName;
+		}
+		else
+		{
+			if (config.DefaultProfile == selectedProfile.Name)
+				config.DefaultProfile = config.Profiles[0].Name;
+		}
 
 		return 1;
 	}
 
 	static int MakeProfileDefault(ConfigFile config)
 	{
-		throw new NotImplementedException();
+		var selectedProfile = ConfigUtils.SelectProfile(config);
+		if (selectedProfile is null)
+			return -1;
+
+		config.DefaultProfile = selectedProfile.Name;
+
+		return 1;
 	}
 
 }
