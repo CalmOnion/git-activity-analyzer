@@ -100,25 +100,33 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 
 		if (props.Contains("Author"))
 		{
-			repo.Author = AnsiConsole.Prompt(
+			var author = AnsiConsole.Prompt(
 				new TextPrompt<string?>("Enter the author name:")
 					.AllowEmpty()
 			);
+
+			repo.Author = string.IsNullOrWhiteSpace(author) ? null : author;
 		}
+
 		if (props.Contains("Username"))
 		{
-			repo.Username = AnsiConsole.Prompt(
+			var username = AnsiConsole.Prompt(
 				new TextPrompt<string?>("Enter the username:")
 					.AllowEmpty()
 			);
+
+			repo.Username = string.IsNullOrWhiteSpace(username) ? null : username;
 		}
+
 		if (props.Contains("Password"))
 		{
-			repo.Password = AnsiConsole.Prompt(
+			var password = AnsiConsole.Prompt(
 				new TextPrompt<string?>("Enter the password:")
 					.AllowEmpty()
 					.Secret()
 			);
+
+			repo.Password = string.IsNullOrWhiteSpace(password) ? null : password;
 		}
 
 		return 1;

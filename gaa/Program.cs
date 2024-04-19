@@ -42,6 +42,7 @@ app.Configure(config =>
 	config.AddCommand<ListCmd>("list");
 	config.AddCommand<AnalyzeCmd>("analyze");
 	config.AddCommand<ProfileCmd>("profile");
+	config.AddCommand<AzureAICmd>("azureai");
 });
 
 app.Run(args);
