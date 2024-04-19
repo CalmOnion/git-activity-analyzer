@@ -12,10 +12,9 @@ public class ConfigUtils
 
 	public static ConfigFile? LoadConfigFile()
 	{
-		var path = ConfigUtils.path;
 		ConfigFile? config;
 
-		if (File.Exists(path) == false)
+		ConfigFile initConfig()
 		{
 			config = new();
 			config.Profiles.Add(new());
@@ -24,8 +23,24 @@ public class ConfigUtils
 			return config;
 		}
 
-		var text = File.ReadAllText(path);
-		config = ConfigFromString<ConfigFile>(text);
+		if (File.Exists(path) == false)
+			return initConfig();
+
+		string text = File.ReadAllText(path);
+
+		try
+		{
+			config = ConfigFromString<ConfigFile>(text);
+		}
+		catch (Exception)
+		{
+			AnsiConsole.MarkupLine("[red]Config file is corrupted[/]");
+			bool confirm = AnsiConsole.Confirm("Would you like to reset the config file?");
+			if (confirm)
+				return initConfig();
+
+			return null;
+		}
 
 		return config;
 	}
