@@ -37,29 +37,11 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
 	config.SetInterceptor(new LogInterceptor());
-	config.AddCommand<RepoCommand>("repo");
-	config.AddCommand<UserCommand>("user");
-	config.AddCommand<ListCommand>("list");
-	config.AddCommand<AnalyzeCommand>("analyze");
-	config.AddCommand<RemoveRepoCommand>("remove-repo");
+	config.AddCommand<RepositoryCmd>("repo");
+	config.AddCommand<DefaultsCmd>("defaults");
+	config.AddCommand<ListCmd>("list");
+	config.AddCommand<AnalyzeCmd>("analyze");
+	config.AddCommand<ProfileCmd>("profile");
 });
 
 app.Run(args);
-//app.Run(["list"]);
-//app.Run(["user", "--author", "Kristoffer"]);
-//app.Run([
-//	"user",
-//	"--author","kristoffer.roenlie@gmail.com",
-//	"--username","kristoffer.roenlie@ad.eyeshare.no",
-//	"--password","*********"
-//]);
-
-//app.Run([
-//	"repo",
-//	"https://github.com/CalmOnion/git-activity-analyzer.git",
-//	"--author","kristoffer.roenlie@gmail.com",
-//	"--username","kristoffer.roenlie@ad.eyeshare.no",
-//	"--password","*********"
-//]);
-
-

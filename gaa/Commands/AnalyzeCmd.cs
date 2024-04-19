@@ -3,7 +3,8 @@ using Spectre.Console.Cli;
 
 namespace CalmOnion.GAA.Commands;
 
-public class AnalyzeCommand(ConfigFile config) : Command<AnalyzeCommand.Settings>
+
+public class AnalyzeCmd(ConfigFile config) : Command<AnalyzeCmd.Settings>
 {
 	readonly ConfigFile config = config;
 

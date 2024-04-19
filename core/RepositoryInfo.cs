@@ -13,6 +13,6 @@ public record RepositoryInfo
 		Url = Url,
 		Author = Author,
 		Username = Username,
-		Password = "********"
+		Password = Password is not null ? "********" : null
 	};
 }
