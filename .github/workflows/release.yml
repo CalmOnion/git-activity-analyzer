@@ -20,9 +20,8 @@ jobs:
          - name: Publish
            run: |
                node ./scripts/release.mjs
-               ls
          - name: Release
            uses: softprops/action-gh-release@v1
            with:
                draft: true
-               files: releases/**/*
+               files: releases/*
