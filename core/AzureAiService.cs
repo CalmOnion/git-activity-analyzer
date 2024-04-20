@@ -14,7 +14,7 @@ public class AzureAiService(string ApiKey, string ResourceName, string Deploymen
 
 	public OpenAIClient Client => _client.Value;
 
-	public string? GetCommitSummary(IDictionary<RepositoryInfo, ICollection<CommitInfo>> commitsByRepo, string prompt = SummaryPrompts.Technical)
+	public string? SummarizeCommits(IDictionary<RepositoryInfo, ICollection<CommitInfo>> commitsByRepo, string prompt = SummaryPrompts.Technical)
 	{
 		var sb = new StringBuilder();
 		foreach (var (repo, commits) in commitsByRepo)
@@ -36,6 +36,27 @@ public class AzureAiService(string ApiKey, string ResourceName, string Deploymen
 		var summary = response.Value.Choices[0]?.Message?.Content;
 
 		return summary;
+	}
+
+	public string? ExplainCommit(CommitInfo commitInfo)
+	{
+		var sb = new StringBuilder();
+		sb.AppendLine("Consider the following commit message and diffs, explain what I did as if you were me.");
+
+		RenderCommitInfo(sb, commitInfo, true);
+
+		var completionOptions = new ChatCompletionsOptions(DeploymentName, [
+			new ChatRequestSystemMessage("You are a helpful assistant."),
+			new ChatRequestUserMessage(sb.ToString()),
+		])
+		{
+			MaxTokens = 2048,
+		};
+		var response = Client.GetChatCompletions(completionOptions) ?? throw new Exception("No response from Azure open-AI.");
+
+		var explanation = response.Value.Choices[0]?.Message?.Content;
+
+		return explanation;
 	}
 
 	public void RenderCommitInfos(StringBuilder sb, ICollection<CommitInfo> infos, bool includeDiffs = false)
