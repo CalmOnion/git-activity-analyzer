@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+   release:
+      permissions:
+         contents: write  # for softprops/action-gh-release to create GitHub release
+      runs-on: ubuntu-latest
+      environment: release
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v3
+         - name: Publish
+           run: |
+               node ./scripts/release.mjs
+         - name: Release
+           uses: softprops/action-gh-release@v1
+           with:
+               draft: true
+               files: releases/*
