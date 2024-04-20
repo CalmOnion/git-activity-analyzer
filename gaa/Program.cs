@@ -33,6 +33,7 @@ app.Configure(config =>
 	config.AddCommand<ListCmd>("list");
 	config.AddCommand<ProfileCmd>("profile");
 	config.AddCommand<AzureAICmd>("azureai");
+	config.AddCommand<EchoConfigPathCmd>("config-path");
 
 	config.AddCommand<AnalyzeCommitCmd>("analyze-commit")
 		.WithDescription("Analyze commits in a repository");
