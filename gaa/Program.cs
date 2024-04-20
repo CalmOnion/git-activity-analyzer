@@ -1,4 +1,5 @@
-﻿using CalmOnion.GAA.Commands;
+﻿using CalmOnion.GAA;
+using CalmOnion.GAA.Commands;
 using CalmOnion.GAA.Config;
 using CalmOnion.GAA.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,17 @@ ConfigFile? config = ConfigUtils.LoadConfigFile()
 	?? throw new InvalidOperationException("Config file could not be loaded");
 
 var serviceCollection = new ServiceCollection()
-	.AddSingleton(config);
+	.AddSingleton<GitQuery>()
+	.AddSingleton(config)
+	.AddSingleton(provider =>
+	{
+		var config = provider.GetRequiredService<ConfigFile>();
+
+		if (config.AzureOpenAI.ApiKey is null || config.AzureOpenAI.Resource is null || config.AzureOpenAI.Deployment is null)
+			throw new InvalidOperationException("Azure OpenAI configuration is missing.");
+
+		return new AzureAiService(config.AzureOpenAI.ApiKey, config.AzureOpenAI.Resource, config.AzureOpenAI.Deployment);
+	});
 
 var registrar = new TypeRegistrar(serviceCollection);
 var app = new CommandApp(registrar);
@@ -20,9 +31,11 @@ app.Configure(config =>
 	config.AddCommand<RepositoryCmd>("repo");
 	config.AddCommand<DefaultsCmd>("defaults");
 	config.AddCommand<ListCmd>("list");
-	config.AddCommand<AnalyzeCmd>("analyze");
 	config.AddCommand<ProfileCmd>("profile");
 	config.AddCommand<AzureAICmd>("azureai");
+
+	config.AddCommand<AnalyzeCommitCmd>("analyze-commit")
+		.WithDescription("Analyze commits in a repository");
 });
 
 app.Run(args);

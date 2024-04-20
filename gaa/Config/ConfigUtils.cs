@@ -85,9 +85,24 @@ public class ConfigUtils
 			.FirstOrDefault(x => x.Name == selectedProfileName);
 	}
 
-	public static RepositoryInfo? SelectRepository(ConfigProfile profile)
+	public static RepositoryInfo[] SelectRepository(ConfigProfile profile, bool multiSelect = false)
 	{
 		var urls = profile.Repositories.Select(r => r.Url).ToList();
+		if (multiSelect)
+		{
+			var selectedUrls = AnsiConsole.Prompt(
+				new MultiSelectionPrompt<string>()
+					.Title("Select repositories")
+					.PageSize(10)
+					.Required()
+					.MoreChoicesText("More")
+					.AddChoices(urls)
+			);
+
+			return profile.Repositories
+				.Where(x => selectedUrls.Contains(x.Url)).ToArray();
+		}
+
 		var selectedUrl = AnsiConsole.Prompt(
 			new SelectionPrompt<string>()
 				.Title("Select a repository")
@@ -96,9 +111,64 @@ public class ConfigUtils
 				.AddChoices(urls)
 		);
 
-		return profile.Repositories
+		var first = profile.Repositories
 			.FirstOrDefault(x => x.Url == selectedUrl);
+
+		return first is not null ? [first] : [];
 	}
+
+	public static (DateTimeOffset from, DateTimeOffset to)? SelectTimeframe()
+	{
+		var option = AnsiConsole.Prompt(
+			new SelectionPrompt<string>()
+				.Title("Select a date range option")
+				.MoreChoicesText("Scroll down for more options")
+				.AddChoices(DateRangeOptions.Keys)
+		);
+
+		return DateRangeOptions[option] switch
+		{
+			DateRangeOption.LastSevenDays => (DateTimeOffset.Now.AddDays(-7), DateTimeOffset.Now),
+			_ => null,
+		};
+	}
+
+	static readonly IReadOnlyDictionary<string, DateRangeOption> DateRangeOptions = new Dictionary<string, DateRangeOption>()
+	{
+		//["This Week"] = DateRangeOption.ThisWeek,
+		//["Last Week"] = DateRangeOption.LastWeek,
+		["Last 7 days"] = DateRangeOption.LastSevenDays,
+		//["Calendar"] = DateRangeOption.Calendar,
+		//["From - To"] = DateRangeOption.FromTo,
+	};
+
+	public static RepositoryScope? SelectScope(
+		ConfigFile config,
+		bool multiSelectRepository = true
+	)
+	{
+		var profile = SelectProfile(config);
+		if (profile is null)
+			return null;
+
+		var repositories = SelectRepository(profile, multiSelectRepository);
+		if (repositories.Length == 0)
+			return null;
+
+		var timeframe = SelectTimeframe();
+
+		if (timeframe is null)
+			return null;
+
+		return new()
+		{
+			From = timeframe.Value.from,
+			To = timeframe.Value.to,
+			Repositories = repositories
+		};
+	}
+
+
 
 	public static HashSet<string> SelectPropertiesToEdit(string[] properties)
 	{
@@ -145,4 +215,23 @@ public class ConfigUtils
 		AnsiConsole.Write(table);
 	}
 
+}
+
+
+public record RepositoryScope
+{
+	public DateTimeOffset From { get; init; }
+	public DateTimeOffset To { get; init; }
+	public RepositoryInfo[] Repositories { get; init; } = [];
+
+}
+
+
+enum DateRangeOption
+{
+	ThisWeek,
+	LastWeek,
+	LastSevenDays,
+	Calendar,
+	FromTo,
 }

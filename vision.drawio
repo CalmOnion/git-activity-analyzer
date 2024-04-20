@@ -1,0 +1,79 @@
+<mxfile host="65bd71144e">
+    <diagram id="QsnEH4ZsfRuIXBqESLuf" name="Page-1">
+        <mxGraphModel dx="848" dy="982" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" background="#CCE5FF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3" value="Commands" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#363636;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="190" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="repo" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="250" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="select profile" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="250" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="select repository" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="465" y="250" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="add/edit/remove" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="250" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="defaults" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="335" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="select profile" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="335" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="set defaults" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="465" y="335" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="profile" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="419" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="add/edit/remove" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="419" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="list" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="500" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="select profile" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="500" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="azureai" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="580" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="token, resource, deployment" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="580" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="analyze" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="871" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="This Week" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="733" y="846" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="Last Week" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="733" y="906" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Last 7 days" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="733" y="966" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="analyze-commit" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="931" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="summarize" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="871" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Select Profile" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="443" y="936" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="Select Repository/All" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="588" y="936" width="145" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="list-commits" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="1023" width="145" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

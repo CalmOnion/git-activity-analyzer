@@ -89,9 +89,11 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 
 	static int EditRepo(ConfigProfile profile)
 	{
-		var repo = ConfigUtils.SelectRepository(profile);
-		if (repo is null)
+		var repos = ConfigUtils.SelectRepository(profile);
+		if (repos.Length == 0)
 			return 0;
+
+		var repo = repos.Single();
 
 		ConfigUtils.DisplayData(repo.ToObfuscated(), "Current Repository Info");
 
