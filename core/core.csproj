@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>CalmOnion.GAA</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>CalmOnion.GAA</RootNamespace>
+		<DebugType>None</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="LibGit2Sharp" Version="0.30.0" />
+	</ItemGroup>
 
 </Project>
