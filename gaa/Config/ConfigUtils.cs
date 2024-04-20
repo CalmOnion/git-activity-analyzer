@@ -128,6 +128,8 @@ public class ConfigUtils
 
 		return DateRangeOptions[option] switch
 		{
+			DateRangeOption.ThisWeek => (DateTimeOffset.Now.StartOfWeek(), DateTimeOffset.Now),
+			DateRangeOption.LastWeek => (DateTimeOffset.Now.StartOfWeek().AddDays(-7), DateTimeOffset.Now.StartOfWeek()),
 			DateRangeOption.LastSevenDays => (DateTimeOffset.Now.AddDays(-7), DateTimeOffset.Now),
 			_ => null,
 		};
@@ -135,8 +137,8 @@ public class ConfigUtils
 
 	static readonly IReadOnlyDictionary<string, DateRangeOption> DateRangeOptions = new Dictionary<string, DateRangeOption>()
 	{
-		//["This Week"] = DateRangeOption.ThisWeek,
-		//["Last Week"] = DateRangeOption.LastWeek,
+		["This Week"] = DateRangeOption.ThisWeek,
+		["Last Week"] = DateRangeOption.LastWeek,
 		["Last 7 days"] = DateRangeOption.LastSevenDays,
 		//["Calendar"] = DateRangeOption.Calendar,
 		//["From - To"] = DateRangeOption.FromTo,
