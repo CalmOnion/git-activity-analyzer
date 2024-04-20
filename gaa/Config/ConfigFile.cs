@@ -46,19 +46,17 @@ public record ConfigProfile
 		Defaults = Defaults.ToObfuscated(),
 		Repositories = Repositories.Select(x => x.ToObfuscated()).ToList()
 	};
-	public JsonText ToJsonText() =>
-		new(JsonSerializer.Serialize(ToObfuscated(), ConfigUtils.jsonSerializerOptions));
 }
 
 
 public record ProfileDefaults
 {
-	public string? Author { get; set; }
+	public string[]? Authors { get; set; }
 	public string? Username { get; set; }
 	public string? Password { get; set; }
 	public ProfileDefaults ToObfuscated() => new()
 	{
-		Author = Author,
+		Authors = Authors,
 		Username = Username,
 		Password = Password is not null ? "********" : null
 	};

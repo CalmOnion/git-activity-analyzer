@@ -31,10 +31,12 @@ public class DefaultsCmd(ConfigFile config) : Command<DefaultsCmd.Settings>
 
 		if (props.Contains("Author"))
 		{
-			defaults.Author = AnsiConsole.Prompt(
+			var author = AnsiConsole.Prompt(
 				new TextPrompt<string?>("Enter the author name:")
 					.AllowEmpty()
 			);
+
+			defaults.Authors = string.IsNullOrWhiteSpace(author) ? null : [author];
 		}
 		if (props.Contains("Username"))
 		{

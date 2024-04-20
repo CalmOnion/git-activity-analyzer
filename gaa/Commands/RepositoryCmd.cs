@@ -79,7 +79,7 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 		profile.Repositories.Add(new RepositoryInfo
 		{
 			Url = url,
-			Author = string.IsNullOrWhiteSpace(author) ? null : author,
+			Authors = string.IsNullOrWhiteSpace(author) ? null : [author],
 			Username = string.IsNullOrWhiteSpace(username) ? null : username,
 			Password = string.IsNullOrWhiteSpace(password) ? null : password,
 		});
@@ -105,7 +105,7 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 					.AllowEmpty()
 			);
 
-			repo.Author = string.IsNullOrWhiteSpace(author) ? null : author;
+			repo.Authors = string.IsNullOrWhiteSpace(author) ? null : [author];
 		}
 
 		if (props.Contains("Username"))

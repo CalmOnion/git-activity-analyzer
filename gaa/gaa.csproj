@@ -8,8 +8,6 @@
 		<RootNamespace>CalmOnion.GAA</RootNamespace>
 		<PublishSingleFile>true</PublishSingleFile>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<DebugType>None</DebugType>
-		<DebugSymbols>false</DebugSymbols>
 	</PropertyGroup>
 
 	<ItemGroup>
