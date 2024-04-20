@@ -27,6 +27,7 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 			RepoAction.Add => AddRepo(selectedProfile),
 			RepoAction.Edit => EditRepo(selectedProfile),
 			RepoAction.Remove => RemoveRepo(selectedProfile),
+			RepoAction.Clone => CloneRepo(selectedProfile),
 			_ => 0,
 		};
 
@@ -42,6 +43,7 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 		{
 			actions.Add(RepoAction.Edit.ToString());
 			actions.Add(RepoAction.Remove.ToString());
+			actions.Add(RepoAction.Clone.ToString());
 		}
 
 		return Enum.Parse<RepoAction>(AnsiConsole.Prompt(
@@ -160,6 +162,49 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 
 		return 1;
 	}
+
+	static int CloneRepo(ConfigProfile profile)
+	{
+		var repos = ConfigUtils.SelectRepository(profile);
+		var repo = repos.Single();
+
+		var url = AnsiConsole.Prompt(
+			new TextPrompt<string>("Enter the new repository URL:")
+				.DefaultValue(repo.Url)
+				.ShowDefaultValue()
+		);
+
+		if (profile.Repositories.Any(x => x.Url == url))
+		{
+			AnsiConsole.MarkupLine($"[red]Repository '{url}' already exists[/]");
+
+			return -1;
+		}
+
+		var clone = new RepositoryInfo
+		{
+			Url = url,
+			Authors = repo.Authors,
+			Username = repo.Username,
+			Password = repo.Password,
+		};
+
+		var preview = JsonSerializer.Serialize(clone.ToObfuscated(), ConfigUtils.jsonSerializerOptions);
+		var table = new Table()
+			.Border(TableBorder.Rounded)
+			.AddColumn("New Repository Info")
+			.AddRow(new JsonText(preview));
+
+		AnsiConsole.Write(table);
+
+		bool confirm = AnsiConsole.Confirm("Confirm creating a new repository info with the above?");
+		if (!confirm)
+			return 0;
+
+		profile.Repositories.Add(clone);
+
+		return 1;
+	}
 }
 
 
@@ -167,5 +212,6 @@ enum RepoAction
 {
 	Add,
 	Edit,
-	Remove
+	Remove,
+	Clone
 }
