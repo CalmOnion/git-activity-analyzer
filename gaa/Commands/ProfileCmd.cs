@@ -15,7 +15,7 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 		["Add Profile"] = ProfileAction.Add,
 		["Clone Profile"] = ProfileAction.Clone,
 		["Remove Profile"] = ProfileAction.Remove,
-		["List"] = ProfileAction.Read
+		["Read Profile"] = ProfileAction.Read
 	};
 
 	public class Settings : CommandSettings { }
