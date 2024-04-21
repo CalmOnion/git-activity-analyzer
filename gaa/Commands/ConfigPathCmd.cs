@@ -5,7 +5,7 @@ using Spectre.Console.Cli;
 namespace CalmOnion.GAA.Commands;
 
 
-public class EchoConfigPathCmd : Command<EchoConfigPathCmd.Settings>
+public class ConfigPathCmd : Command<ConfigPathCmd.Settings>
 {
 	public class Settings : CommandSettings
 	{

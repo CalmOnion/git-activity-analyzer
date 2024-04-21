@@ -1,0 +1,12 @@
+{
+	"profiles": {
+		"gaa": {
+			"commandName": "Project",
+			"commandLineArgs": ""
+		},
+		"gaa-profile": {
+			"commandName": "Project",
+			"commandLineArgs": "profile"
+		}
+	}
+}

@@ -28,12 +28,10 @@ var app = new CommandApp(registrar);
 
 app.Configure(config =>
 {
-	config.AddCommand<RepositoryCmd>("repo");
-	config.AddCommand<DefaultsCmd>("defaults");
-	config.AddCommand<ListCmd>("list");
-	config.AddCommand<ProfileCmd>("profile");
+	config.AddCommand<ConfigPathCmd>("config-path");
+	config.AddCommand<ProfileCmd>("profile")
+		.WithDescription("Guided command for modifying config profiles");
 	config.AddCommand<AzureAICmd>("azureai");
-	config.AddCommand<EchoConfigPathCmd>("config-path");
 
 	config.AddCommand<AnalyzeCommitCmd>("analyze-commit")
 		.WithDescription("Analyze commits in a repository");

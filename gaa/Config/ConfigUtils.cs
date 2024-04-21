@@ -135,7 +135,7 @@ public class ConfigUtils
 		};
 	}
 
-	static readonly IReadOnlyDictionary<string, DateRangeOption> DateRangeOptions = new Dictionary<string, DateRangeOption>()
+	static readonly BiDictionary<string, DateRangeOption> DateRangeOptions = new()
 	{
 		["This Week"] = DateRangeOption.ThisWeek,
 		["Last Week"] = DateRangeOption.LastWeek,

@@ -11,9 +11,7 @@ public class RepositoryCmd(ConfigFile config) : Command<RepositoryCmd.Settings>
 {
 	readonly ConfigFile config = config;
 
-	public class Settings : CommandSettings
-	{
-	}
+	public class Settings : CommandSettings { }
 
 	public override int Execute(CommandContext context, Settings settings)
 	{
