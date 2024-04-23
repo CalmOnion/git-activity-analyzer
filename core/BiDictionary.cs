@@ -27,5 +27,5 @@ public class BiDictionary<TKey, TValue>
 	public TValue GetByKey(TKey key) => normalDict[key];
 	public TKey GetByValue(TValue value) => reverseDict[value];
 	public Dictionary<TKey, TValue>.KeyCollection Keys => normalDict.Keys;
-	public Dictionary<TValue, TKey>.KeyCollection Values => reverseDict.Keys;
+	public Dictionary<TKey, TValue>.ValueCollection Values => normalDict.Values;
 }
