@@ -31,6 +31,8 @@ public class ConfigUtils
 		try
 		{
 			config = ConfigFromString<ConfigFile>(text);
+			if (config is null)
+				throw new Exception("Config file is corrupted");
 		}
 		catch (Exception)
 		{
@@ -166,6 +168,7 @@ public class ConfigUtils
 		{
 			From = timeframe.Value.from,
 			To = timeframe.Value.to,
+			Profile = profile,
 			Repositories = repositories
 		};
 	}
@@ -209,7 +212,7 @@ public class ConfigUtils
 	{
 		var table = new Table()
 			.Border(TableBorder.Rounded)
-			.AddColumn($"Profiles");
+			.AddColumn("Profiles");
 
 		foreach (var profile in profiles)
 			table.AddRow(new JsonText(ConfigToString(profile.ToObfuscated())));
@@ -224,6 +227,7 @@ public record RepositoryScope
 {
 	public DateTimeOffset From { get; init; }
 	public DateTimeOffset To { get; init; }
+	public required ConfigProfile Profile { get; init; }
 	public RepositoryInfo[] Repositories { get; init; } = [];
 
 }

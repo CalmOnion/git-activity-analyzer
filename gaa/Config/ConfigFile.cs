@@ -8,23 +8,21 @@ public record ConfigFile
 	public const string DefaultProfileName = "default";
 	public string Version { get; init; } = "1.0";
 	public string DefaultProfile { get; set; } = DefaultProfileName;
-	public AzureOpenAIConfig AzureOpenAI { get; init; } = new();
 	public List<ConfigProfile> Profiles { get; init; } = [];
 	public ConfigFile ToObfuscated() => new()
 	{
 		Version = Version,
-		AzureOpenAI = AzureOpenAI.ToObfuscated(),
 		Profiles = Profiles.Select(x => x.ToObfuscated()).ToList()
 	};
 }
 
 
-public record AzureOpenAIConfig
+public record AzureOpenAiConfig
 {
 	public string? ApiKey { get; set; }
 	public string? Resource { get; set; }
 	public string? Deployment { get; set; }
-	public AzureOpenAIConfig ToObfuscated() => new()
+	public AzureOpenAiConfig ToObfuscated() => new()
 	{
 		ApiKey = ApiKey is not null ? "********" : null,
 		Resource = Resource,
@@ -37,11 +35,15 @@ public record ConfigProfile
 {
 	public string Name { get; set; } = ConfigFile.DefaultProfileName;
 	public ProfileDefaults Defaults { get; init; } = new();
+	public ProfilePrompts Prompts { get; init; } = new();
+	public AzureOpenAiConfig AzureOpenAi { get; set; } = new();
 	public List<RepositoryInfo> Repositories { get; init; } = [];
 	public ConfigProfile ToObfuscated() => new()
 	{
 		Name = Name,
 		Defaults = Defaults.ToObfuscated(),
+		Prompts = Prompts,
+		AzureOpenAi = AzureOpenAi.ToObfuscated(),
 		Repositories = Repositories.Select(x => x.ToObfuscated()).ToList()
 	};
 }
@@ -58,4 +60,12 @@ public record ProfileDefaults
 		Username = Username,
 		Password = Password is not null ? "********" : null
 	};
+}
+
+
+public record ProfilePrompts
+{
+	public string? ExplanationPrompt { get; set; }
+	public string? SummaryPrompt { get; set; }
+	public int? MaxTokens { get; set; }
 }

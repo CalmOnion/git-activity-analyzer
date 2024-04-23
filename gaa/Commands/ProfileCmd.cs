@@ -15,7 +15,8 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 		["Add Profile"] = ProfileAction.Add,
 		["Clone Profile"] = ProfileAction.Clone,
 		["Remove Profile"] = ProfileAction.Remove,
-		["Read Profile"] = ProfileAction.Read
+		["Read Profile"] = ProfileAction.Read,
+		["Output config path"] = ProfileAction.OutputConfigPath,
 	};
 
 	public class Settings : CommandSettings { }
@@ -31,6 +32,7 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 			ProfileAction.Clone => CloneProfile(),
 			ProfileAction.Remove => RemoveProfile(),
 			ProfileAction.Read => ReadProfiles(),
+			ProfileAction.OutputConfigPath => OutputConfigPath(),
 			_ => 0,
 		};
 
@@ -39,9 +41,25 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 		return status;
 	}
 
+	static int OutputConfigPath()
+	{
+		var table = new Table()
+			.Border(TableBorder.Rounded)
+			.AddColumn("Config Path")
+			.AddRow(new Markup($"[link bold teal]{ConfigUtils.path}[/]"));
+
+		AnsiConsole.Write(table);
+
+		return 1;
+	}
+
 	ProfileAction SelectAction()
 	{
-		List<string> actions = [ProfileOptions.GetByValue(ProfileAction.Add)];
+		List<string> actions = [
+			ProfileOptions.GetByValue(ProfileAction.Add),
+			ProfileOptions.GetByValue(ProfileAction.OutputConfigPath),
+		];
+
 		if (config.Profiles.Count > 0)
 		{
 			actions.Add(ProfileOptions.GetByValue(ProfileAction.Edit));
@@ -108,6 +126,8 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 		{
 			Name = name,
 			Defaults = selectedProfile.Defaults,
+			Prompts = selectedProfile.Prompts,
+			AzureOpenAi = selectedProfile.AzureOpenAi,
 			Repositories = selectedProfile.Repositories,
 		};
 
@@ -173,16 +193,18 @@ public class ProfileCmd(ConfigFile config) : Command<ProfileCmd.Settings>
 
 		return 1;
 	}
+
 }
 
 
 enum ProfileAction
 {
 	Edit,
-	Add,
 	Clone,
+	Add,
 	Remove,
-	Read
+	Read,
+	OutputConfigPath,
 }
 
 
@@ -193,6 +215,8 @@ class ModifyProfile(ConfigFile config, ConfigProfile profile)
 		["Set as default profile"] = ModifyProfileActions.SetAsDefault,
 		["Edit profile information"] = ModifyProfileActions.Edit,
 		["Set profile defaults"] = ModifyProfileActions.SetDefaults,
+		["Azure AI configuration"] = ModifyProfileActions.AzureAiConfig,
+		["Adjust prompts"] = ModifyProfileActions.AdjustPrompts,
 		["Edit repository info"] = ModifyProfileActions.EditRepo,
 		["Add repository info"] = ModifyProfileActions.AddRepo,
 		["Clone repository info"] = ModifyProfileActions.CloneRepo,
@@ -206,6 +230,8 @@ class ModifyProfile(ConfigFile config, ConfigProfile profile)
 			ModifyProfileActions.SetAsDefault => MakeProfileDefault(),
 			ModifyProfileActions.Edit => EditProfileInfo(),
 			ModifyProfileActions.SetDefaults => SetProfileDefaults(),
+			ModifyProfileActions.AzureAiConfig => AzureAiConfig(),
+			ModifyProfileActions.AdjustPrompts => AdjustPrompts(),
 			ModifyProfileActions.EditRepo => EditRepo(),
 			ModifyProfileActions.AddRepo => AddRepo(),
 			ModifyProfileActions.CloneRepo => CloneRepo(),
@@ -220,6 +246,8 @@ class ModifyProfile(ConfigFile config, ConfigProfile profile)
 			options.GetByValue(ModifyProfileActions.SetAsDefault),
 			options.GetByValue(ModifyProfileActions.SetDefaults),
 			options.GetByValue(ModifyProfileActions.AddRepo),
+			options.GetByValue(ModifyProfileActions.AzureAiConfig),
+			options.GetByValue(ModifyProfileActions.AdjustPrompts),
 		];
 
 		if (profile.Repositories.Count > 0)
@@ -311,6 +339,105 @@ class ModifyProfile(ConfigFile config, ConfigProfile profile)
 
 		ConfigUtils.DisplayProfile(profile);
 		ConfigUtils.SaveConfigFile(config);
+
+		return 1;
+	}
+
+	int AzureAiConfig()
+	{
+		ConfigUtils.DisplayData(
+			profile.AzureOpenAi.ToObfuscated(),
+			"Current Azure AI Info"
+		);
+
+		var props = ConfigUtils
+			.SelectPropertiesToEdit(["ApiKey", "Resource", "Deployment"]);
+
+		if (props.Contains("ApiKey"))
+		{
+			var apiKey = AnsiConsole.Prompt(
+				new TextPrompt<string?>("Enter the API key:")
+					.AllowEmpty()
+			);
+
+			profile.AzureOpenAi.ApiKey = string.IsNullOrWhiteSpace(apiKey)
+				? null : apiKey;
+		}
+
+		if (props.Contains("Resource"))
+		{
+			var resource = AnsiConsole.Prompt(
+				new TextPrompt<string?>("Enter the resource:")
+					.AllowEmpty()
+			);
+
+			profile.AzureOpenAi.Resource = string.IsNullOrWhiteSpace(resource)
+				? null : resource;
+		}
+
+		if (props.Contains("Deployment"))
+		{
+			var deployment = AnsiConsole.Prompt(
+				new TextPrompt<string?>("Enter the deployment:")
+					.AllowEmpty()
+			);
+
+			profile.AzureOpenAi.Deployment = string.IsNullOrWhiteSpace(deployment)
+				? null : deployment;
+		}
+
+		ConfigUtils.SaveConfigFile(config);
+
+		ConfigUtils.DisplayData(
+			profile.AzureOpenAi.ToObfuscated(),
+			"New Azure AI Info"
+		);
+
+		return 1;
+	}
+
+	int AdjustPrompts()
+	{
+		var prompts = profile.Prompts;
+
+		ConfigUtils.DisplayData(prompts, "Current Prompt Info");
+
+		var props = ConfigUtils
+			.SelectPropertiesToEdit(["ExplanationPrompt", "SummaryPrompt", "MaxTokens"]);
+
+		if (props.Contains("ExplanationPrompt"))
+		{
+			var explanationPrompt = AnsiConsole.Prompt(
+				new TextPrompt<string?>("Enter the explanation prompt:")
+					.AllowEmpty()
+			);
+
+			prompts.ExplanationPrompt = string.IsNullOrWhiteSpace(explanationPrompt)
+				? null : explanationPrompt;
+		}
+		if (props.Contains("SummaryPrompt"))
+		{
+			var summaryPrompt = AnsiConsole.Prompt(
+				new TextPrompt<string?>("Enter the summary prompt:")
+					.AllowEmpty()
+			);
+
+			prompts.SummaryPrompt = string.IsNullOrWhiteSpace(summaryPrompt)
+				? null : summaryPrompt;
+		}
+		if (props.Contains("MaxTokens"))
+		{
+			var maxTokens = AnsiConsole.Prompt(
+				new TextPrompt<int?>("Enter the max tokens:")
+					.AllowEmpty()
+			);
+
+			prompts.MaxTokens = maxTokens;
+		}
+
+		ConfigUtils.SaveConfigFile(config);
+
+		ConfigUtils.DisplayData(prompts, "New Prompt Info");
 
 		return 1;
 	}
@@ -481,11 +608,13 @@ class ModifyProfile(ConfigFile config, ConfigProfile profile)
 
 enum ModifyProfileActions
 {
-	SetAsDefault,
-	Edit,
-	SetDefaults,
+	AdjustPrompts,
 	EditRepo,
-	AddRepo,
 	CloneRepo,
+	AddRepo,
 	RemoveRepo,
+	Edit,
+	SetAsDefault,
+	SetDefaults,
+	AzureAiConfig,
 }

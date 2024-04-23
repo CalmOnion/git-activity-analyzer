@@ -5,9 +5,11 @@ using Spectre.Console.Cli;
 namespace CalmOnion.GAA.Commands;
 
 
-public class AnalyzeCommitCmd(ConfigFile config, GitQuery query, AzureAiService ai) : Command<AnalyzeCommitCmd.Settings>
+public class AnalyzeCommitCmd(ConfigFile config, GitQuery query)
+: Command<AnalyzeCommitCmd.Settings>
 {
 	readonly ConfigFile config = config;
+	AzureAiService? ai;
 
 	public class Settings : CommandSettings
 	{
@@ -21,6 +23,23 @@ public class AnalyzeCommitCmd(ConfigFile config, GitQuery query, AzureAiService 
 		if (scope is null)
 			return -1;
 
+		if (scope.Profile.AzureOpenAi is null
+			|| scope.Profile.AzureOpenAi.ApiKey is null
+			|| scope.Profile.AzureOpenAi.Resource is null
+			|| scope.Profile.AzureOpenAi.Deployment is null
+		)
+		{
+			AnsiConsole.MarkupLine("[red]Azure OpenAI configuration is missing[/]");
+
+			return -1;
+		}
+
+		ai = new AzureAiService(
+			scope.Profile.AzureOpenAi.ApiKey,
+			scope.Profile.AzureOpenAi.Resource,
+			scope.Profile.AzureOpenAi.Deployment
+		);
+
 		PickCommit(scope);
 
 		return 1;
@@ -28,7 +47,11 @@ public class AnalyzeCommitCmd(ConfigFile config, GitQuery query, AzureAiService 
 
 	int PickCommit(RepositoryScope scope)
 	{
-		AnsiConsole.MarkupLine($"[bold]Analyzing commits from {scope.From:g} to {scope.To:g}[/] in [bold]{scope.Repositories.Single().Name}[/]");
+		if (ai is null)
+			throw new InvalidOperationException("Azure AI service not initialized");
+
+		AnsiConsole.MarkupLine($"[bold]Analyzing commits from {scope.From:g} to {scope.To:g}[/]"
+			+ $" in [bold]{scope.Repositories.Single().Name}[/]");
 
 		var commits = query.GetCommits(scope.From, scope.To, scope.Repositories.Single());
 
@@ -59,10 +82,14 @@ public class AnalyzeCommitCmd(ConfigFile config, GitQuery query, AzureAiService 
 		string? analysis = null;
 
 		AnsiConsole.Status()
-			.Spinner(Spinner.Known.Star)
+			.Spinner(Spinner.Known.Dots)
 			.Start("Thinking...", ctx =>
 			{
-				analysis = ai.ExplainCommit(commit);
+				analysis = ai.ExplainCommit(
+					commit,
+					prompt: scope.Profile.Prompts.ExplanationPrompt,
+					maxTokens: scope.Profile.Prompts.MaxTokens
+				);
 			});
 
 		if (analysis is null)
