@@ -5,10 +5,11 @@ using Spectre.Console.Cli;
 namespace CalmOnion.GAA.Commands;
 
 
-public class AnalyzeCommitCmd(ConfigFile config, GitQuery query)
-: Command<AnalyzeCommitCmd.Settings>
+public class ExplainCmd(ConfigFile config, GitQuery query)
+: Command<ExplainCmd.Settings>
 {
 	readonly ConfigFile config = config;
+	Settings settings = new();
 	AzureAiService? ai;
 
 	public class Settings : CommandSettings
@@ -19,6 +20,8 @@ public class AnalyzeCommitCmd(ConfigFile config, GitQuery query)
 
 	public override int Execute(CommandContext context, Settings settings)
 	{
+		this.settings = settings;
+
 		var scope = ConfigUtils.SelectScope(config, false);
 		if (scope is null)
 			return -1;
@@ -98,14 +101,20 @@ public class AnalyzeCommitCmd(ConfigFile config, GitQuery query)
 			return 0;
 		}
 
-		var table = new Table().Border(TableBorder.Rounded);
+		var table = new Table().Border(TableBorder.Minimal);
 		table.AddColumn($"[teal]{commit.Date:dd-MM-yy hh:mm}[/] | [bold]{commit.Message}[/]");
 		table.AddRow(analysis);
-		table.Expand();
 
+		AnsiConsole.WriteLine();
 		AnsiConsole.Write(table);
 
-		return 0;
+		if (settings.OutFile is not null)
+		{
+			File.WriteAllText(settings.OutFile, analysis);
+			AnsiConsole.MarkupLine($"[bold]Analysis saved to {settings.OutFile}[/]");
+		}
+
+		return 1;
 	}
 
 }

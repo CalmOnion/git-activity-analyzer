@@ -22,8 +22,15 @@ app.Configure(config =>
 	config.AddCommand<ProfileCmd>("profile")
 		.WithDescription("Guided command for modifying config profiles");
 
-	config.AddCommand<AnalyzeCommitCmd>("analyze-commit")
+	// will be removed in favor of explain
+	config.AddCommand<ExplainCmd>("analyze-commit")
 		.WithDescription("Analyze commits in a repository");
+
+	config.AddCommand<ExplainCmd>("explain")
+		.WithDescription("Analyzes and explains commits in a repository");
+
+	config.AddCommand<SummaryCmd>("summary")
+		.WithDescription("Summarize commits in in a given timeframe from a repository");
 });
 
 app.Run(args);
