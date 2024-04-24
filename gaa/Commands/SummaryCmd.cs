@@ -64,7 +64,7 @@ public class SummaryCmd(ConfigFile config, GitQuery query)
 			.AddColumn("Message");
 
 		foreach (var c in commits)
-			table.AddRow($"[teal]{c.Date:dd-MM-yy hh:mm}[/]", $"[bold]{c.Message}[/]");
+			table.AddRow($"[teal]{c.Date:dd-MM-yy hh:mm}[/]", $"[bold]{c.Message.EscapeMarkup()}[/]");
 
 		AnsiConsole.WriteLine();
 		AnsiConsole.Write(table);
